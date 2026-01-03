@@ -70,11 +70,10 @@ func (server *Server) initializeDB(dbConfig DBConfig) {
 	}
 
 	for _, value := range RegisterModels() {
-		// fmt.Println("VALUE =>", value.Model)
 		err = server.DB.Debug().AutoMigrate(&value.Model)
 
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("Error migrate => ", err.Error())
 		}
 	}
 
