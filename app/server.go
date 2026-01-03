@@ -51,6 +51,11 @@ func getEnv(key, callback string) string {
 func (server *Server) initialize(appConfig AppConfig, dbConfig DBConfig) {
 	fmt.Println("Call initialize from " + appConfig.AppName + " in " + appConfig.AppEnv)
 
+	server.initializeDB(dbConfig)
+	server.initializeRoutes()
+}
+
+func (server *Server) initializeDB(dbConfig DBConfig) {
 	var err error
 
 	if dbConfig.DBDriver == "mysql" {
@@ -64,8 +69,16 @@ func (server *Server) initialize(appConfig AppConfig, dbConfig DBConfig) {
 		panic("failed to connect db " + err.Error())
 	}
 
-	server.Router = mux.NewRouter()
-	server.initializeRoutes()
+	for _, value := range RegisterModels() {
+		// fmt.Println("VALUE =>", value.Model)
+		err = server.DB.Debug().AutoMigrate(&value.Model)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	fmt.Println("Migrate Success")
 }
 
 // db close saat sudah tidak digunakan
