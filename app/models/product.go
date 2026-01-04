@@ -18,7 +18,7 @@ type Product struct {
 	Price            decimal.Decimal `gorm:"typw:decimal(16,2);"`
 	Stock            int
 	Weight           decimal.Decimal `gorm:"type:decimal(10,2);"`
-	ShortDescription string          `gorm:"size:255;"`
+	ShortDescription string          `gorm:"type:text;"`
 	Description      string          `gorm:"type:text;"`
 	Status           int
 	DeletedDate      gorm.DeletedAt
